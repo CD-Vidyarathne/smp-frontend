@@ -1,6 +1,8 @@
 {
   "name": "frontend",
   "private": true,
+  "author": "Chamindu Vidyarthne",
+  "repository": "https://github.com/CD-Vidyarthne/smp-frontend",
   "version": "0.0.1",
   "type": "module",
   "scripts": {
