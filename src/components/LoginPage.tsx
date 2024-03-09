@@ -1,5 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useUserStore } from "../stores/userStore";
+
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  const handleChange = (value: string, key: string) => {
+    setUser({ ...user, [key]: value });
+  };
+
+  const loginUser = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.get(
+        `http://localhost:8070/api/v1/users/login/${user.email}`,
+      );
+
+      if (!res.data.email) {
+        console.log("Email is incorrect.");
+      } else {
+        if (res.data.password === user.password) {
+          console.log("Login Successful.");
+        } else {
+          console.log("Password is incorrect.");
+        }
+      }
+
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <div className="w-full max-w-md rounded-lg shadow-md p-8 border">
@@ -18,6 +53,7 @@ const LoginPage: React.FC = () => {
               className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="Enter your email"
               required
+              onChange={(e) => handleChange(e.target.value, "email")}
             />
           </div>
           <div className="mb-6">
@@ -33,11 +69,13 @@ const LoginPage: React.FC = () => {
               className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="Enter your password"
               required
+              onChange={(e) => handleChange(e.target.value, "password")}
             />
           </div>
           <button
             type="submit"
             className="w-full px-4 py-2 rounded-lg btn btn-outline font-medium text-center "
+            onClickCapture={(e) => loginUser(e)}
           >
             Log In
           </button>
