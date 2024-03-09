@@ -8,7 +8,7 @@ const ProfileRedirector: React.FC = () => {
   if (!user) {
     return <Navigate to="/login" replace />;
   } else {
-    return <Navigate to={`./${user?.userID}`} />;
+    return <Navigate to={`./${user?.id}`} />;
   }
 };
 

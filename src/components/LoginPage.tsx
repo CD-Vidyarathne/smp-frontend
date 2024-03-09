@@ -25,6 +25,8 @@ const LoginPage: React.FC = () => {
       } else {
         if (res.data.password === user.password) {
           console.log("Login Successful.");
+          localStorage.setItem("user", JSON.stringify(res.data));
+          navigate("/");
         } else {
           console.log("Password is incorrect.");
         }
