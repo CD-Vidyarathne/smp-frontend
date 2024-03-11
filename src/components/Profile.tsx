@@ -1,29 +1,31 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
 import { useUserStore } from "../stores/userStore";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const Profile: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>();
   const { user, setUser } = useUserStore();
-
-  const getUser = async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:8070/api/v1/users/${userId}`,
-      );
-      setUser(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const param = useParams<{ userId: string }>();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getUser();
+    if (user.firstname === "") {
+      const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+      if (currentUser.id !== param.userId) {
+        console.log("Something went wrong. Redirecting to login page...");
+        if (currentUser.id) {
+          localStorage.removeItem("user");
+        }
+        navigate("/");
+      } else {
+        setUser(JSON.parse(localStorage.getItem("user") || "{}"));
+      }
+    }
   }, []);
+
   return (
     <div>
       <h1>Hi {`${user.firstname} ${user.lastname}`}</h1>
+      <Link to="/profile/feed">Feed</Link>
     </div>
   );
 };

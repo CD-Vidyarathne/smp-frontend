@@ -20,12 +20,17 @@ const LoginPage: React.FC = () => {
         `http://localhost:8070/api/v1/users/login/${user.email}`,
       );
 
+      console.log(res);
+
+      let loggedUser = res.data;
+
       if (!res.data.email) {
         console.log("Email is incorrect.");
       } else {
         if (res.data.password === user.password) {
           console.log("Login Successful.");
-          localStorage.setItem("user", JSON.stringify(res.data));
+          localStorage.setItem("user", JSON.stringify(loggedUser));
+          setUser({ ...loggedUser, active: true });
           navigate("/");
         } else {
           console.log("Password is incorrect.");

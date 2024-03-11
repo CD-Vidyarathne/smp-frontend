@@ -3,16 +3,19 @@ import LoginPage from "./components/LoginPage.tsx";
 import SignupPage from "./components/SignupPage.tsx";
 import ProfileRedirector from "./components/ProfileRedirector.tsx";
 import Profile from "./components/Profile.tsx";
+import FeedPage from "./components/FeedPage.tsx";
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
+import { useEffect } from "react";
+import { useUserStore } from "./stores/userStore.ts";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/profile" />,
+    element: <Navigate to="/profile/feed" />,
   },
   {
     path: "/login",
@@ -25,14 +28,27 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfileRedirector></ProfileRedirector>,
-  },
-  {
-    path: "/profile/:userId",
-    element: <Profile />,
+    children: [
+      {
+        path: "/profile/:userId",
+        element: <Profile />,
+      },
+      {
+        path: "/profile/feed",
+        element: <FeedPage />,
+      },
+    ],
   },
 ]);
 
 function App() {
+  const { setUser } = useUserStore();
+  useEffect(() => {
+    const resUser = JSON.parse(localStorage.getItem("user") || "{}");
+    if (resUser.id && resUser.id !== "") {
+      setUser(resUser);
+    }
+  }, []);
   return (
     <>
       <ThemeController />

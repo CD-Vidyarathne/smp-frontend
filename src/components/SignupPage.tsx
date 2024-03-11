@@ -81,7 +81,7 @@ const SignupPage: React.FC = () => {
               onChange={(e) => handleChange(e.target.value, "email")}
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-4">
             <label
               htmlFor="password"
               className="block text-sm font-medium mb-2"
@@ -95,6 +95,22 @@ const SignupPage: React.FC = () => {
               placeholder="Enter your password"
               required
               onChange={(e) => handleChange(e.target.value, "password")}
+            />
+          </div>
+          <div className="mb-6">
+            <label
+              htmlFor="imageURL"
+              className="block text-sm font-medium mb-2"
+            >
+              Profile Image URL
+            </label>
+            <input
+              type="text"
+              id="imageURL"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              placeholder="Enter your profile image URL"
+              required
+              onChange={(e) => handleChange(e.target.value, "imageURL")}
             />
           </div>
           <button

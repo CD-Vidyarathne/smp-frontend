@@ -4,6 +4,7 @@ export type User = {
   lastname: string;
   email: string;
   password: string;
-  isActive: boolean;
+  imageURL: string;
+  active: boolean;
   joinedDate: string;
 };

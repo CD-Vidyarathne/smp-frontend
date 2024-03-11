@@ -1,15 +1,12 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useUserStore } from "../stores/userStore";
 
 const ProfileRedirector: React.FC = () => {
   const res = localStorage.getItem("user");
-  const user = res ? JSON.parse(res) : undefined;
+  const resUser = res ? JSON.parse(res) : undefined;
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  } else {
-    return <Navigate to={`./${user?.id}`} />;
-  }
+  return resUser ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default ProfileRedirector;
