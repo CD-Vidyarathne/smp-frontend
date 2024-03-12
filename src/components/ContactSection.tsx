@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useUserStore } from "../stores/userStore";
 import { User } from "../types/User";
 
@@ -6,7 +6,7 @@ const ContactSection: React.FC = () => {
   const { allUsers } = useUserStore();
 
   return (
-    <section>
+    <section className="p-4">
       {allUsers.map((user) => (
         <Contact key={user.id} user={user} />
       ))}
@@ -20,7 +20,7 @@ type ContactProps = {
 
 const Contact: React.FC<ContactProps> = ({ user }) => {
   return (
-    <div className="flex items-center p-4 max-w-max border rounded-full border-gray-300">
+    <div className="flex items-center p-4 w-full border-b border-gray-300">
       <div className="mr-4 relative">
         <img
           src={user.imageURL}

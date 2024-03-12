@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../stores/userStore";
 import ContactSection from "./ContactSection.tsx";
 import axios from "axios";
 import Navbar from "./Navbar.tsx";
+import ShortcutSection from "./ShorcutSection.tsx";
+import Wall from "./Wall.tsx";
+import "../styles/Scrollbar.css";
 
 const FeedPage: React.FC = () => {
   const { user, setUser, setAllUsers } = useUserStore();
@@ -25,9 +28,9 @@ const FeedPage: React.FC = () => {
 
   const getAllUsers = async () => {
     const res = await axios.get("http://localhost:8070/api/v1/users");
-    console.log(res);
     setAllUsers(res.data);
   };
+
   useEffect(() => {
     if (user.firstname === "") {
       if (resUser.id && resUser.id !== "") {
@@ -41,18 +44,33 @@ const FeedPage: React.FC = () => {
         return;
       }
     }
-    setTimeout(() => {
-      setUserActive();
-      getAllUsers();
-    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    if (!user.active) setUserActive();
+    getAllUsers();
   }, []);
 
   return (
     <div>
       <Navbar />
-      <h1>Feed</h1>
-      <Link to={`/profile/${user.id}`}>Profile</Link>
-      <ContactSection />
+      <main className="flex ">
+        <section
+          id="shortcuts"
+          className="h-[89vh] basis-1/6 overflow-y-scroll bg-base-300 "
+        >
+          <ShortcutSection />
+        </section>
+        <section id="wall" className="h-[89vh] basis-7/12 overflow-y-scroll">
+          <Wall />
+        </section>
+        <section
+          id="contacts"
+          className="h-[89vh] basis-3/12 overflow-y-scroll border-l "
+        >
+          <ContactSection />
+        </section>
+      </main>
     </div>
   );
 };
