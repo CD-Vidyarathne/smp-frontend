@@ -24,9 +24,14 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="p-4 shadow-lg bg-base-200 h-[11vh]">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="font-bold text-[36px]">Connecto</div>
+    <nav className="p-4 shadow-lg bg-base-200 h-[11vh] w-full ">
+      <div className="mx-auto flex justify-between w-full items-center">
+        <div
+          className="font-bold text-[36px] cursor-pointer select-none"
+          onClick={() => navigate("/profile/feed")}
+        >
+          Connecto
+        </div>
 
         <div className="flex space-x-4">
           <Link to={`/profile/${user.id}`}>

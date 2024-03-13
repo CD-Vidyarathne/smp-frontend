@@ -47,7 +47,7 @@ const FeedPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!user.active) setUserActive();
+    setUserActive();
     getAllUsers();
   }, []);
 

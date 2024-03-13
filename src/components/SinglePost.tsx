@@ -7,7 +7,7 @@ type SinglePostProps = {
 
 const SinglePost: React.FC<SinglePostProps> = ({ post }) => {
   return (
-    <div className="border-b p-4 shadow-md mb-4">
+    <div className="p-4 shadow-md shadow-base-300 border border-base-300 rounded-md mb-4">
       <div className="flex items-center mb-4">
         <img
           src={post.userImgURL}
