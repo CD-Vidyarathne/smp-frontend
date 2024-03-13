@@ -48,7 +48,14 @@ const FeedPage: React.FC = () => {
 
   useEffect(() => {
     setUserActive();
+  }, []);
+
+  useEffect(() => {
     getAllUsers();
+
+    const intervalId = setInterval(getAllUsers, 10000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
