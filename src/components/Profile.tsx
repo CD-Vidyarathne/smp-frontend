@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { initialState, useUserStore } from "../stores/userStore";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./Navbar";
-import axios from "axios";
+import axios from "../config/axios";
+import { toast } from "react-toastify";
 
 const Profile: React.FC = () => {
   const { user, setUser } = useUserStore();
@@ -19,18 +20,18 @@ const Profile: React.FC = () => {
     setUser({ ...user, imageURL: newImageURL });
 
     try {
-      await axios.post(`http://localhost:8070/api/v1/users/update`, {
+      await axios.post(`users/update`, {
         ...user,
         imageURL: newImageURL,
       });
+      toast.success("✅ Success.");
     } catch (err) {
+      toast.error("❌ Failed.");
       console.log(err);
     }
 
     try {
-      const resUser = await axios.get(
-        `http://localhost:8070/api/v1/users/${user.id}`,
-      );
+      const resUser = await axios.get(`users/${user.id}`);
       const data = JSON.stringify(resUser.data);
       localStorage.setItem("user", data);
     } catch (err) {
@@ -46,20 +47,21 @@ const Profile: React.FC = () => {
         try {
           navigate("/");
           localStorage.removeItem("user");
-          await axios.post(`http://localhost:8070/api/v1/users/update`, {
+          await axios.post(`users/update`, {
             ...user,
             active: false,
             password: newPassword,
           });
           setUser(initialState);
+          toast.success("✅ Success. Please Login Again.");
         } catch (err) {
           console.log(err);
         }
       } else {
-        console.log("current password is false");
+        toast.error("❌ Current Password is False.");
       }
     } else {
-      console.log("Please enter all values");
+      toast.error("❌ Please enter all values.");
     }
 
     setCurrentPassword("");
@@ -86,7 +88,7 @@ const Profile: React.FC = () => {
       <Navbar />
       <main className="max-w-max mx-auto py-4">
         <h1 className="font-semibold text-4xl">Hi,</h1>
-        <h1 className="font-bold text-info text-[72px]">{`${user.firstname} ${user.lastname}`}</h1>
+        <h1 className="font-bold text-info font-cursive text-[72px]">{`${user.firstname} ${user.lastname}`}</h1>
         <div className="max-w-md mt-8 border p-4 border-base-content rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Change Profile Picture</h2>
           <form className="space-y-4">

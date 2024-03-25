@@ -1,19 +1,22 @@
 import React, { useEffect } from "react";
 import SinglePost from "./SinglePost";
-import axios from "axios";
+import axios from "../config/axios";
 import { usePostStore } from "../stores/postStore";
 
 const AllPosts: React.FC = () => {
   const { allPosts, setAllPosts } = usePostStore();
 
   const getAllPosts = async () => {
-    const res = await axios.get("http://localhost:8071/api/v1/posts/");
-    console.log(res);
+    const res = await axios.get("posts/");
     setAllPosts(res.data);
   };
 
   useEffect(() => {
     getAllPosts();
+
+    const intervalId = setInterval(getAllPosts, 10000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (

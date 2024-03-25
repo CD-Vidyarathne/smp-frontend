@@ -1,7 +1,8 @@
 import React from "react";
 import { CommentResponse } from "../types/Comment";
 import { useUserStore } from "../stores/userStore";
-import axios from "axios";
+import axios from "../config/axios";
+import { toast } from "react-toastify";
 
 type SingleCommentProps = {
   comment: CommentResponse;
@@ -12,12 +13,11 @@ const SingleComment: React.FC<SingleCommentProps> = ({ comment }) => {
 
   const deleteComment = async () => {
     try {
-      console.log("Deleting comment with id " + comment.commentId);
-      await axios.delete(
-        `http://localhost:8072/api/v1/comments/delete/${comment.commentId}`,
-      );
+      await axios.delete(`comments/delete/${comment.commentId}`);
+      toast.success("✅ Comment Deleted.");
     } catch (err) {
-      console.log(err);
+      toast.error("❌ Something Went Wrong.");
+      console.error(err);
     }
   };
 

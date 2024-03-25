@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../config/axios";
 import { useUserStore } from "../stores/userStore";
+import { toast } from "react-toastify";
+import logo from "../assets/logo.png";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,39 +18,33 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.get(
-        `http://localhost:8070/api/v1/users/login/${user.email}`,
-      );
-
-      console.log(res);
+      const res = await axios.get(`users/login/${user.email}`);
 
       let loggedUser = res.data;
 
       if (!res.data.email) {
-        console.log("Email is incorrect.");
+        toast.error("❌ Email is incorrect.");
       } else {
         if (res.data.password === user.password) {
-          console.log("Login Successful.");
           localStorage.setItem("user", JSON.stringify(loggedUser));
           setUser({ ...loggedUser, active: true });
+          toast.success("✅ Login Success.");
           navigate("/");
         } else {
-          console.log("Password is incorrect.");
+          toast.error("❌ Password is incorrect.");
         }
       }
-
-      console.log(res);
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      toast.error("❌ Something Went Wrong.");
     }
   };
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <div className="w-full max-w-md rounded-lg shadow-md p-8 border">
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Log In to{" "}
-          <span className="text-3xl font-bold text-amber-500">Connecto</span>
-        </h2>
+        <div className="text-2xl font-semibold text-center mb-6 flex flex-col items-center justify-center">
+          <p>Log In to</p> <img src={logo} className="w-[300px]" />
+        </div>
         <form>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium mb-2">

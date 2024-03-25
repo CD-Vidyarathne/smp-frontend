@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../stores/userStore";
 import ContactSection from "./ContactSection.tsx";
-import axios from "axios";
+import axios from "../config/axios";
 import Navbar from "./Navbar.tsx";
 import ShortcutSection from "./ShorcutSection.tsx";
 import Wall from "./Wall.tsx";
+import { toast } from "react-toastify";
 import "../styles/Scrollbar.css";
 
 const FeedPage: React.FC = () => {
@@ -16,18 +17,18 @@ const FeedPage: React.FC = () => {
   const setUserActive = async () => {
     if (user.firstname) {
       try {
-        await axios.post(`http://localhost:8070/api/v1/users/update`, {
+        await axios.post(`users/update`, {
           ...user,
           active: true,
         });
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
   };
 
   const getAllUsers = async () => {
-    const res = await axios.get("http://localhost:8070/api/v1/users");
+    const res = await axios.get("users");
     setAllUsers(res.data);
   };
 
@@ -36,7 +37,7 @@ const FeedPage: React.FC = () => {
       if (resUser.id && resUser.id !== "") {
         setUser(resUser);
       } else {
-        console.log("Something went wrong. Redirecting to login page...");
+        toast.error("❌ Something Went Wrong. Please Login again.");
         if (resUser.id) {
           localStorage.removeItem("user");
         }

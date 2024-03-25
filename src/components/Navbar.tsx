@@ -1,24 +1,26 @@
 import React from "react";
 import { useUserStore, initialState } from "../stores/userStore";
-import axios from "axios";
+import axios from "../config/axios";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import logo from "../assets/logo.png";
 
 const Navbar: React.FC = () => {
   const { user, setUser } = useUserStore();
   const navigate = useNavigate();
   const signOut = async () => {
-    console.log("Signing Out");
     if (user.firstname) {
       try {
         navigate("/");
         localStorage.removeItem("user");
-        await axios.post(`http://localhost:8070/api/v1/users/update`, {
+        await axios.post(`users/update`, {
           ...user,
           active: false,
         });
         setUser(initialState);
+        toast.success("✅ Signed Out.");
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
   };
@@ -27,10 +29,10 @@ const Navbar: React.FC = () => {
     <nav className="p-4 shadow-lg bg-base-200 h-[11vh] w-full ">
       <div className="mx-auto flex justify-between w-full items-center">
         <div
-          className="font-bold text-[36px] cursor-pointer select-none"
+          className="font-bold cursor-pointer select-none"
           onClick={() => navigate("/profile/feed")}
         >
-          Connecto
+          <img src={logo} className="w-[300px]" />
         </div>
 
         <div className="flex space-x-4">

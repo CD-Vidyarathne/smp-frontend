@@ -3,21 +3,32 @@ import { PostResponse } from "../types/Post";
 import SingleComment from "./SingleComment.tsx";
 import CommentCreate from "./CommentCreate.tsx";
 import { CommentResponse } from "../types/Comment.ts";
-import axios from "axios";
+import axios from "../config/axios";
+import { useUserStore } from "../stores/userStore.ts";
+import { toast } from "react-toastify";
 
 type SinglePostProps = {
   post: PostResponse;
 };
 
 const SinglePost: React.FC<SinglePostProps> = ({ post }) => {
+  const { user } = useUserStore();
   const [allComments, setAllComments] = useState<CommentResponse[]>([]);
   const [commentsVisible, setCommentsVisible] = useState<boolean>(false);
 
   const getAllCommentsOfPost = async () => {
-    const res = await axios.get(
-      `http://localhost:8072/api/v1/comments/post/${post.postId}`,
-    );
+    const res = await axios.get(`comments/post/${post.postId}`);
     setAllComments(res.data);
+  };
+
+  const deletePost = async () => {
+    try {
+      await axios.delete(`posts/delete/${post.postId}`);
+      toast.success("✅ Post Deleted.");
+    } catch (err) {
+      console.error(err);
+      toast.error("❌ Something Went Wrong.");
+    }
   };
 
   useEffect(() => {
@@ -26,7 +37,7 @@ const SinglePost: React.FC<SinglePostProps> = ({ post }) => {
     return () => clearInterval(intervalId);
   }, []);
   return (
-    <div className="p-4 shadow-md shadow-base-300 border border-base-300 rounded-md mb-4">
+    <div className="relative p-4 shadow-md shadow-base-300 border border-base-300 rounded-md mb-4">
       <div className="flex items-center mb-4">
         <img
           src={post.userImgURL}
@@ -42,6 +53,15 @@ const SinglePost: React.FC<SinglePostProps> = ({ post }) => {
           </span>
         </div>
       </div>
+
+      {user.firstname === post.userFirstname && (
+        <p
+          onClick={deletePost}
+          className="absolute right-5 top-10 font-bold select-none cursor-pointer hover:underline  bg-base-100 p-1 rounded-bl-lg bg-opacity-80"
+        >
+          Delete
+        </p>
+      )}
 
       <p className="mb-4 text-secondary-content">{post.postText}</p>
       {post.postImgURL && (

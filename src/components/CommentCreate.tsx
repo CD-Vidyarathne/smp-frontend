@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { CommentRequest, CommentResponse } from "../types/Comment";
+import { CommentRequest } from "../types/Comment";
 import { useUserStore } from "../stores/userStore";
-import axios from "axios";
+import axios from "../config/axios";
+import { toast } from "react-toastify";
 
 type CommentCreateProps = {
   postId: string;
@@ -21,16 +22,13 @@ const CommentCreate: React.FC<CommentCreateProps> = ({ postId }) => {
   const postComment = async () => {
     if (comment.content && comment.userid && comment.postid) {
       try {
-        await axios.post(
-          `http://localhost:8072/api/v1/comments/post/${comment.postid}`,
-          comment,
-        );
+        await axios.post(`comments/post/${comment.postid}`, comment);
         setComment(initialCommentState);
       } catch (err) {
-        console.log(err);
+        toast.error("❌ Something Went Wrong.");
       }
     } else {
-      console.log("Something went wrong");
+      toast.error("❌ Something Went Wrong.");
     }
   };
 

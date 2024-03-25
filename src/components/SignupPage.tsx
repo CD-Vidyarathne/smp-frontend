@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "../stores/userStore.ts";
-import axios from "axios";
+import axios from "../config/axios";
+import { toast } from "react-toastify";
+import logo from "../assets/logo.png";
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,25 +18,22 @@ const SignupPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "http://localhost:8070/api/v1/users/register",
-        user,
-      );
+      await axios.post("users/register", user);
 
-      console.log(res);
+      toast.success("✅ Registration Success. Redirecting to Login page...");
       navigate("/login");
     } catch (err) {
-      console.log(err);
+      toast.error("❌ Something Went Wrong.");
+      console.error(err);
     }
   };
 
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <div className="w-full max-w-md rounded-lg shadow-md p-8 border">
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Sign Up to{" "}
-          <span className="text-3xl font-bold text-amber-500">Connecto</span>
-        </h2>
+        <div className="text-2xl font-semibold text-center mb-6 flex flex-col items-center justify-center">
+          <p>Log In to</p> <img src={logo} className="w-[300px]" />
+        </div>
         <form>
           <div className="mb-4">
             <label

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { usePostStore, initialStatePostReq } from "../stores/postStore";
 import { useUserStore } from "../stores/userStore";
-import axios from "axios";
+import axios from "../config/axios";
+import { toast } from "react-toastify";
 
 const PostCreate: React.FC = () => {
   const { user } = useUserStore();
@@ -19,15 +20,12 @@ const PostCreate: React.FC = () => {
     e.preventDefault();
 
     try {
-      console.log(reqPost);
-      const res = await axios.post(
-        "http://localhost:8071/api/v1/posts/",
-        reqPost,
-      );
-      console.log(res);
+      await axios.post("posts/", reqPost);
+      toast.success("✅ Post Created.");
       setReqPost(initialStatePostReq);
     } catch (err) {
-      console.log(err);
+      toast.error("❌ Something Went Wrong.");
+      console.error(err);
     }
   };
 
